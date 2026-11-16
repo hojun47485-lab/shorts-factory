@@ -13,6 +13,15 @@ sudo apt-get install -y ffmpeg fonts-nanum
 pip install -r requirements.txt
 ```
 
+### Windows
+```powershell
+winget install --id Python.Python.3.12 -e
+winget install --id Gyan.FFmpeg -e
+pip install -r requirements.txt
+```
+폰트는 [나눔고딕](https://hangeul.naver.com/font)을 설치하면 그대로 쓰고, 없으면 맑은 고딕(기본 폰트)을 씁니다.
+다른 폰트를 쓰려면 `SHORTS_FONT_BOLD` 환경변수에 `.ttf` 경로를 지정하세요.
+
 ## 사용법
 1. 블로그 글을 `posts/<slug>.md`로 저장합니다.
 2. Claude Code 세션에서 "posts/<slug>.md로 쇼츠랑 카드뉴스 만들어 줘"라고 요청합니다.

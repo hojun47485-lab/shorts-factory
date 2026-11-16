@@ -29,8 +29,31 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 W, H = 1080, 1920
 FPS = 30
-FONT_BOLD = "/usr/share/fonts/truetype/nanum/NanumGothicBold.ttf"
-FONT_HEAVY = "/usr/share/fonts/truetype/nanum/NanumGothicExtraBold.ttf"
+def _find_font(candidates: list[str]) -> str | None:
+    """OS별 후보 경로 중 처음 존재하는 폰트. 환경변수로 직접 지정할 수도 있다."""
+    win = os.environ.get("WINDIR", r"C:\Windows")
+    local = os.environ.get("LOCALAPPDATA", "")
+    for c in candidates:
+        c = c.format(win=win, local=local, home=str(Path.home()))
+        if c and Path(c).is_file():
+            return c
+    return None
+
+
+_NANUM_DIRS = [
+    "/usr/share/fonts/truetype/nanum/",                    # Linux (fonts-nanum)
+    "{win}/Fonts/",                                        # Windows (모든 사용자 설치)
+    "{local}/Microsoft/Windows/Fonts/",                    # Windows (현재 사용자 설치)
+    "/Library/Fonts/", "{home}/Library/Fonts/",            # macOS
+]
+FONT_BOLD = os.environ.get("SHORTS_FONT_BOLD") or _find_font(
+    [d + "NanumGothicBold.ttf" for d in _NANUM_DIRS]
+    + ["{win}/Fonts/malgunbd.ttf",                          # Windows 기본: 맑은 고딕 Bold
+       "/System/Library/Fonts/AppleSDGothicNeo.ttc"]        # macOS 기본
+) or "/usr/share/fonts/truetype/nanum/NanumGothicBold.ttf"
+FONT_HEAVY = os.environ.get("SHORTS_FONT_HEAVY") or _find_font(
+    [d + "NanumGothicExtraBold.ttf" for d in _NANUM_DIRS]
+) or FONT_BOLD
 
 SCENE_PAD = 0.45      # 장면 끝에 붙는 여백(초)
 INTRO_ANIM = 0.45     # 헤드라인 카드 등장 애니메이션 길이(초)
@@ -408,7 +431,9 @@ def main() -> int:
 
     for f in (FONT_BOLD,):
         if not Path(f).exists():
-            sys.exit(f"폰트가 없습니다: {f}  (sudo apt-get install -y fonts-nanum)")
+            sys.exit(f"폰트가 없습니다: {f}\n"
+                     "  Linux: sudo apt-get install -y fonts-nanum\n"
+                     "  Windows/macOS: 나눔고딕을 설치하거나 SHORTS_FONT_BOLD 환경변수로 .ttf 경로를 지정하세요")
 
     data = json.loads(Path(args.script).read_text(encoding="utf-8"))
     voice = args.voice or data.get("voice", "ko-KR-InJoonNeural")

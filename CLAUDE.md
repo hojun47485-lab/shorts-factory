@@ -64,5 +64,6 @@ API 키는 쓰지 않습니다. 블로그를 대본으로 바꾸는 요약 단�
 ## 환경 메모
 
 - 필요한 것: `ffmpeg`, `fonts-nanum`(apt), `requirements.txt`(pip)
+- 폰트는 OS별로 자동으로 찾습니다(Linux 나눔 → Windows 나눔/맑은 고딕 → macOS 나눔/애플고딕). `SHORTS_FONT_BOLD`, `SHORTS_FONT_HEAVY` 환경변수로 직접 지정할 수 있습니다.
 - edge-tts는 certifi 인증서를 고정으로 씁니다. 그래서 `render_shorts.py`는 `SSL_CERT_FILE`이 있으면 그 CA를 쓰도록 바꿉니다(프록시 환경용, 검증은 유지).
 - 쇼츠 렌더링은 50초 영상 기준으로 1분 정도 걸립니다. TTS는 인터넷(speech.platform.bing.com) 연결이 필요합니다.

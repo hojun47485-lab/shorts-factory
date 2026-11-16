@@ -1,0 +1,3 @@
+output/.*_work/
+*TEMP_MPY_*
+__pycache__/

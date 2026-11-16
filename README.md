@@ -1,5 +1,11 @@
 # shorts-factory
-API 키 없이 쇼츠(1080x1920, 30fps) 영상을 만드는 스크립트입니다.
+
+블로그 글 하나로 **쇼츠 영상**과 **카드뉴스**를 함께 만드는 원소스 멀티유즈 도구입니다. API 키는 필요 없습니다.
+
+```
+posts/<slug>.md  ──(Claude가 요약)──▶  content/<slug>.json  ──make.py──▶  output/<slug>/shorts.mp4
+   블로그 원문                          원소스 대본                        output/<slug>/cards/card_01.png …
+```
 
 ## 준비
 ```bash
@@ -8,9 +14,21 @@ pip install -r requirements.txt
 ```
 
 ## 사용법
+1. 블로그 글을 `posts/<slug>.md`로 저장합니다.
+2. Claude Code 세션에서 "posts/<slug>.md로 쇼츠랑 카드뉴스 만들어 줘"라고 요청합니다.
+   Claude가 [CLAUDE.md](CLAUDE.md)의 규칙대로 `content/<slug>.json`을 작성하고 렌더링합니다.
+3. content JSON을 직접 고친 뒤 다시 만들 수도 있습니다.
+
 ```bash
-python render_shorts.py --script script.json --output output/sample.mp4
+python make.py content/year-end-tax.json
 ```
-- `script.json`: `title`, `voice`, `rate`, `scenes[{tag, headline, narration}]` (`headline`의 `\n`은 줄바꿈)
-- 음성: edge-tts, 자막은 단어 단위 타이밍에 맞춰 표시
-- `--voice`, `--rate "+10%"` 옵션으로 덮어쓸 수 있음
+```bash
+python make.py content/year-end-tax.json --only cards
+```
+
+| 결과물 | 규격 |
+|---|---|
+| 쇼츠 | 1080x1920, 30fps MP4, edge-tts 음성(ko-KR-InJoonNeural), 단어 타이밍에 맞춘 자막 |
+| 카드뉴스 | 1080x1350 PNG (인스타그램 4:5). 표지, 포인트별 본문, 마무리 |
+
+content JSON 형식과 대본 작성 규칙은 [CLAUDE.md](CLAUDE.md)에 있습니다.

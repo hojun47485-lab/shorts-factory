@@ -218,7 +218,9 @@ def font(size: int, heavy: bool = False) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(path, size)
 
 
-def gradient_background(accent: tuple[int, int, int], seed: int) -> Image.Image:
+def gradient_background(accent: tuple[int, int, int], seed: int,
+                        size: tuple[int, int] = (W, H)) -> Image.Image:
+    W, H = size  # noqa: N806 - 쇼츠/카드뉴스 공용
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
     t = yy / H
     top = np.array([14, 16, 32], np.float32)
